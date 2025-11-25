@@ -9,8 +9,6 @@ SemaphoreHandle_t stateMutex;
 
 system_state_t sysState;
 
-// Watchdog
-TickType_t pumpLastOnTick = 0;
 
 static inline uint32_t millis_from_tick(TickType_t t) { return (uint32_t)(t * portTICK_PERIOD_MS); }
 

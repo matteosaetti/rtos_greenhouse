@@ -3,6 +3,7 @@
 extern SemaphoreHandle_t stateMutex;
 extern system_state_t sysState;
 TickType_t pumpLastOnTick = 0;
+const TickType_t PUMP_MAX_ON_TICKS = pdMS_TO_TICKS(2 * 60 * 1000);
 
 //void update_return_valve_locked(); 
 
