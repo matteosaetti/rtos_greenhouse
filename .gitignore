@@ -40,7 +40,9 @@
 # debug information files
 *.dwo
 
-build/
+build/*
+.vscode
+CMakeLists_copy.txt
+pico-sdk
 FreeRTOS-Kernel
-include
 

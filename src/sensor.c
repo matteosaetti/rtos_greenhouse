@@ -1,4 +1,4 @@
-#include "main.h"
+#include "sensor.h"
 
 extern QueueHandle_t qSensor;
 extern SemaphoreHandle_t stateMutex;
@@ -28,7 +28,6 @@ void sensor_task(void *pv) {
         msg.humidity = hum;
         msg.timestamp = (uint32_t)millis_from_tick(xTaskGetTickCount());
 
-        //Send to controller
         xQueueSend(qSensor, &msg, 0);
 
         vTaskDelayUntil(&lastWake, pdMS_TO_TICKS(PERIOD_SENSOR_MS));

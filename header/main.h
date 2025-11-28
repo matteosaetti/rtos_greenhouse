@@ -38,7 +38,7 @@
 #define PUMP_MAX_ON_MS 5000
 #define MS_TO_TICKS(xTimeInMs) ((TickType_t)((((uint64_t)(xTimeInMs) * (uint64_t)configTICK_RATE_HZ) + 999U) / 1000U))
 
-// Mutex globale
+//Mutex
 extern SemaphoreHandle_t stateMutex;
 
 typedef enum
@@ -47,7 +47,6 @@ typedef enum
     CMD_VALVE_CLOSE
 } valve_cmd_t;
 
-// Struct messaggio sensore
 typedef struct
 {
     int sensor_id;
@@ -63,7 +62,6 @@ typedef struct
     bool returnValveOn;
 } system_state_t;
 
-// Prototipi task
 void sensor_task(void *pvParameters);
 void controller_task(void *pvParameters);
 void valve_task(void *pvParameters);

@@ -1,4 +1,4 @@
-#include "main.h"
+#include "controller.h"
 
 extern QueueHandle_t qSensor;
 extern QueueHandle_t qValveCmd[3];
@@ -14,16 +14,13 @@ void controller_task(void *pv) {
     TickType_t lastWake = xTaskGetTickCount();
 
     for(;;) {
-        // process all messages available
         while(xQueueReceive(qSensor, &msg, 0) == pdTRUE) {
             int idx = msg.sensor_id - 1;
-            // update shared humidity
             xSemaphoreTake(stateMutex, portMAX_DELAY);
             int old = sysState.humidity[idx];
             sysState.humidity[idx] = msg.humidity;
             xSemaphoreGive(stateMutex);
 
-            // hysteresis: decide desired valve state
             bool wantOpen = false;
             xSemaphoreTake(stateMutex, portMAX_DELAY);
             int current = sysState.humidity[idx];
@@ -32,14 +29,11 @@ void controller_task(void *pv) {
 
             if (current < HUM_THRESHOLD_LOW) wantOpen = true;
             else if (current > HUM_THRESHOLD_HIGH) wantOpen = false;
-            else wantOpen = curValve; // keep previous in hysteresis band
+            else wantOpen = curValve; 
 
             valve_cmd_t cmd = wantOpen ? CMD_VALVE_OPEN : CMD_VALVE_CLOSE;
             xQueueSend(qValveCmd[idx], &cmd, 0);
         }
-
-        // Additional higher-level safety checks can be run here:
-        // ex: max concurrent valves, anti-cavitation, pump timeout, etc.
 
         vTaskDelay(CONTROLLER_PERIOD);
     }
